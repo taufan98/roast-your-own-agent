@@ -26,5 +26,15 @@ const ROAST =
 const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
 mkdirSync(outDir, { recursive: true });
 const outPath = join(outDir, "entry.txt");
+// Self-check the gate before writing: one line, 1–200 chars, not only
+// whitespace. Fail loudly instead of shipping an invalid entry.
+if (
+  ROAST.length < 1 ||
+  ROAST.length > 200 ||
+  ROAST.trim().length === 0 ||
+  ROAST.includes("\n")
+) {
+  throw new Error(`Roast fails the gate (${ROAST.length} chars)`);
+}
 writeFileSync(outPath, ROAST, "utf8");
 console.log(`Wrote ${ROAST.length} characters to ${outPath}`);
